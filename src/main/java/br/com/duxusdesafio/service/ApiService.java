@@ -6,6 +6,7 @@ import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,14 +79,67 @@ public class ApiService {
             }
             return maisUsado;
         }
-
     /**
      * Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período.
      * OBS: Time é o clube + composição em determinada data
      */
     public List<String> integrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        if (todosOsTimes == null){
+            throw new IllegalArgumentException("Parâmetros não podem ser nulos");
+        }
+        Map<String, Integer> contagemClubes = new HashMap<>();
+
+        //clubes no períodos
+        for(Time time : todosOsTimes){
+            LocalDate data = time.getData();
+            if(data == null) continue;
+
+            if (dataInicial != null && data.isBefore(dataInicial)) continue;
+            if(dataFinal != null && data.isAfter(dataFinal)) continue;
+
+
+            String clube = time.getNomeDoClube();
+            contagemClubes.put(clube, contagemClubes.getOrDefault(clube, 0) + 1);
+        }
+
+        if (contagemClubes.isEmpty()) return null;
+
+        //Descobre clube mais recorrente
+        String clubeMaisRecorrente = null;
+        int maiorContagem = 0;
+
+        for (Map.Entry<String, Integer> entry : contagemClubes.entrySet()) {
+            if(entry.getValue() > maiorContagem){
+                maiorContagem = entry.getValue();
+                clubeMaisRecorrente = entry.getKey();
+            }
+        }
+
+        //Pega time mais recente
+        Time timeMaisRecente =  null;
+
+        for(Time time : todosOsTimes){
+            LocalDate data = time.getData();
+            if (data == null) continue;
+
+            if (dataInicial != null && data.isBefore(dataInicial)) continue;
+            if(dataFinal != null && data.isAfter(dataFinal)) continue;
+
+            if (time.getNomeDoClube().equals(clubeMaisRecorrente)){
+                if (timeMaisRecente == null || data.isBefore(timeMaisRecente.getData())){
+                    timeMaisRecente = time;
+                }
+            }
+        }
+
+        if (timeMaisRecente == null) return null;
+
+        List<String> nomes = new ArrayList<>();
+
+            for(ComposicaoTime composicao : timeMaisRecente.getComposicaoTime()){
+                nomes.add(composicao.getIntegrante().getNome());
+            }
+        return nomes;
     }
 
     /**

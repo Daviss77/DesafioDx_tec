@@ -13,6 +13,8 @@ import org.mockito.Spy;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -87,5 +89,57 @@ public class ApiServiceIntegranteTest {
         DadosParaTesteApiService dados = new DadosParaTesteApiService();
 
         apiService.integranteMaisUsado(data1993, null, dados.getTodosOsTimes());
+    }
+
+    //========================
+    // TESTE - integrantesDoTimeMaisRecorrente
+    // =======================
+
+    @DataProvider
+    public static Object[][] integrantesDoTimeMaisRecorrenteParams(){
+        DadosParaTesteApiService dados = new DadosParaTesteApiService();
+        List<Time> todos = dados.getTodosOsTimes();
+
+        List<String> chigagoEsperado = Arrays.asList(
+                dados.getDenis_rodman().getNome(),
+                dados.getMichael_jordan().getNome(),
+                dados.getScottie_pippen().getNome()
+        );
+
+        List<String> detroitEsperado = Arrays.asList(
+                dados.getDenis_rodman().getNome()
+        );
+
+        return new Object[][]{
+                {data1993, data1995, todos, chigagoEsperado},
+                {LocalDate.of(1994,1,1), data1995, todos, chigagoEsperado},
+                {data1993, data1993, todos, detroitEsperado},
+                {null, data1995, todos, chigagoEsperado},
+                {data1993, null, todos, chigagoEsperado},
+                {null, null, todos, chigagoEsperado},
+                {data1993, data1995, new ArrayList<>(), null},
+                {LocalDate.of(2000,1,1),LocalDate.of(2001,1,1), todos, null}
+        };
+    }
+
+    @Test
+    @UseDataProvider("integrantesDoTimeMaisRecorrenteParams")
+    public void deveRetornarIntegrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes, List<String> esperado){
+
+        List<String> resultado = apiService.integrantesDoTimeMaisRecorrente(dataInicial, dataFinal, todosOsTimes);
+
+        if(resultado != null){
+            Collections.sort(resultado);
+        }
+        if (esperado != null){
+            Collections.sort(esperado);
+        }
+
+        assertEquals(esperado, resultado);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void deveLancarExcecaoQuandoListaForNula_TimeMaisRecorrente(){
+        apiService.integrantesDoTimeMaisRecorrente(data1993, data1995, null);
     }
 }
