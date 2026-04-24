@@ -1,10 +1,12 @@
 package br.com.duxusdesafio.service;
 
+import br.com.duxusdesafio.model.ComposicaoTime;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +48,36 @@ public class ApiService {
      * dentro do período
      */
     public Integrante integranteMaisUsado(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
-    }
+
+        if(dataInicial == null || dataFinal == null || todosOsTimes == null ){
+                throw new IllegalArgumentException("Lista de times não pode ser nula");
+            }
+
+            Map<Integrante, Integer> contagem = new HashMap<>();
+
+            //Filtrando times por data e conta quantos integrantes aparece
+            for (Time time : todosOsTimes) {
+                LocalDate data = time.getData();
+
+                if (data.isBefore(dataInicial) || data.isAfter(dataFinal)) {
+                    continue;
+                }
+                for(ComposicaoTime composicao : time.getComposicaoTime()){
+                    Integrante integrante = composicao.getIntegrante();
+                    contagem.put(integrante, contagem.getOrDefault(integrante, 0) + 1);
+                }
+            }
+            Integrante maisUsado = null;
+            int maiorContagem = 0;
+
+            for(Map.Entry<Integrante, Integer> entry : contagem.entrySet()){
+                if(entry.getValue() > maiorContagem){
+                    maiorContagem = entry.getValue();
+                    maisUsado = entry.getKey();
+                }
+            }
+            return maisUsado;
+        }
 
     /**
      * Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período.

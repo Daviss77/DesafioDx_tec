@@ -111,6 +111,12 @@ public class TesteApiService {
                         data1995,
                         todosOsTimes,
                         dadosParaTesteApiService.getDenis_rodman()
+                },
+                {
+                    data1994, data1995, todosOsTimes, dadosParaTesteApiService.getDenis_rodman()
+                },
+                {
+                    data1993,  data1993
                 }
         };
     }
