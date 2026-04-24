@@ -60,24 +60,15 @@ public class ApiService {
             for (Time time : todosOsTimes) {
                 LocalDate data = time.getData();
 
-                if (data.isBefore(dataInicial) || data.isAfter(dataFinal)) {
-                    continue;
-                }
+                if (!isTimeValido(time, dataInicial, dataFinal)) continue;
+
                 for(ComposicaoTime composicao : time.getComposicaoTime()){
                     Integrante integrante = composicao.getIntegrante();
                     contagem.put(integrante, contagem.getOrDefault(integrante, 0) + 1);
                 }
             }
-            Integrante maisUsado = null;
-            int maiorContagem = 0;
 
-            for(Map.Entry<Integrante, Integer> entry : contagem.entrySet()){
-                if(entry.getValue() > maiorContagem){
-                    maiorContagem = entry.getValue();
-                    maisUsado = entry.getKey();
-                }
-            }
-            return maisUsado;
+            return obterMaisRecorrente(contagem);
         }
     /**
      * Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período.
@@ -174,8 +165,20 @@ public class ApiService {
      * Vai retornar o nome do Clube mais comum dentro do período
      */
     public String clubeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
-        // TODO Implementar método seguindo as instruções!
-        return null;
+        if (todosOsTimes == null) {
+            throw new IllegalArgumentException("Lista não pode ser nula");
+        }
+        Map<String, Integer> contagemClubes = new HashMap<>();
+
+        for(Time time : todosOsTimes){
+            if (!isTimeValido(time, dataInicial, dataFinal)) continue;
+
+            String clube = time.getNomeDoClube();
+            if(clube == null) continue;
+
+            contagemClubes.put(clube, contagemClubes.getOrDefault(clube, 0) + 1);
+        }
+        return obterMaisRecorrente(contagemClubes);
     }
 
 
@@ -194,6 +197,8 @@ public class ApiService {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
+
+
 
     private boolean isTimeValido(Time time, LocalDate dataInicial, LocalDate dataFinal){
         if (time == null || time.getData() == null) return false;
