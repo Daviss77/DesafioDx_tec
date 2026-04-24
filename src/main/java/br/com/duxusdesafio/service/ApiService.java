@@ -85,18 +85,14 @@ public class ApiService {
      */
     public List<String> integrantesDoTimeMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
         if (todosOsTimes == null){
-            throw new IllegalArgumentException("Parâmetros não podem ser nulos");
+            throw new IllegalArgumentException("Lista de times não pode ser nula");
         }
         Map<String, Integer> contagemClubes = new HashMap<>();
 
         //clubes no períodos
         for(Time time : todosOsTimes){
             LocalDate data = time.getData();
-            if(data == null) continue;
-
-            if (dataInicial != null && data.isBefore(dataInicial)) continue;
-            if(dataFinal != null && data.isAfter(dataFinal)) continue;
-
+            if(!isTimeValido(time, dataInicial, dataFinal)) continue;
 
             String clube = time.getNomeDoClube();
             contagemClubes.put(clube, contagemClubes.getOrDefault(clube, 0) + 1);
@@ -116,17 +112,13 @@ public class ApiService {
         }
 
         //Pega time mais recente
-        Time timeMaisRecente =  null;
+        Time timeMaisRecente = null;
 
         for(Time time : todosOsTimes){
-            LocalDate data = time.getData();
-            if (data == null) continue;
+            if(!isTimeValido(time, dataInicial, dataFinal)) continue;
 
-            if (dataInicial != null && data.isBefore(dataInicial)) continue;
-            if(dataFinal != null && data.isAfter(dataFinal)) continue;
-
-            if (time.getNomeDoClube().equals(clubeMaisRecorrente)){
-                if (timeMaisRecente == null || data.isBefore(timeMaisRecente.getData())){
+            if(clubeMaisRecorrente.equals(time.getNomeDoClube())){
+                if(timeMaisRecente == null || time.getData().isAfter(timeMaisRecente.getData())){
                     timeMaisRecente = time;
                 }
             }
@@ -142,12 +134,40 @@ public class ApiService {
         return nomes;
     }
 
+
+
+
     /**
      * Vai retornar a função mais recorrente nos times dentro do período
      */
     public String funcaoMaisRecorrente(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+            if (todosOsTimes == null) {
+                throw new IllegalArgumentException("Lista de times não pode ser nula");
+            }
+
+            Map<String, Integer> contagemFuncoes = new HashMap<>();
+
+            for(Time time : todosOsTimes){
+               if (time == null || time.getData() == null) continue;
+
+               LocalDate data = time.getData();
+               if(dataInicial != null && data.isBefore(dataInicial)) continue;
+               if (dataFinal != null && data.isAfter(dataFinal)) continue;
+
+                List<ComposicaoTime> composicoes = time.getComposicaoTime();
+                if (composicoes == null) continue;
+
+                for (ComposicaoTime composicao : composicoes){
+                    if(composicao == null || composicao.getIntegrante() == null) continue;
+
+                    String funcao = composicao.getIntegrante().getFuncao();
+                    if (funcao == null) continue;
+
+                    contagemFuncoes.put(funcao, contagemFuncoes.getOrDefault(funcao, 0) + 1);
+                }
+            }
+
+            return obterMaisRecorrente(contagemFuncoes);
     }
 
     /**
@@ -174,5 +194,32 @@ public class ApiService {
         // TODO Implementar método seguindo as instruções!
         return null;
     }
+
+    private boolean isTimeValido(Time time, LocalDate dataInicial, LocalDate dataFinal){
+        if (time == null || time.getData() == null) return false;
+
+        LocalDate data = time.getData();
+
+        if(dataInicial != null && data.isBefore(dataInicial)) return false;
+        if(dataFinal != null && data.isAfter(dataFinal)) return false;
+
+        return true;
+    }
+
+    private <T> T obterMaisRecorrente(Map<T, Integer> contagem){
+        if(contagem == null || contagem.isEmpty()) return null;
+
+        T maisRecorrente = null;
+        int maiorContagem = 0;
+
+        for(Map.Entry<T, Integer> entry : contagem.entrySet()){
+            if(entry.getValue() > maiorContagem){
+                maiorContagem = entry.getValue();
+                maisRecorrente = entry.getKey();
+            }
+        }
+        return maisRecorrente;
+    }
+
 
 }
