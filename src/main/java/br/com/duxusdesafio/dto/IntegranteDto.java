@@ -5,6 +5,14 @@ public class IntegranteDto {
     private String nome;
     private String funcao;
 
+    public  IntegranteDto() {}
+
+    public IntegranteDto(Long id, String nome, String funcao) {
+        this.id = id;
+        this.nome = nome;
+        this.funcao = funcao;
+    }
+
     public String getFuncao() {
         return funcao;
     }

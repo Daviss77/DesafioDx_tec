@@ -1,5 +1,6 @@
 package br.com.duxusdesafio.service;
 
+import br.com.duxusdesafio.dto.TimeResponseDto;
 import br.com.duxusdesafio.model.ComposicaoTime;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
@@ -27,16 +28,17 @@ public class ApiService {
     /*Fazendo pequenas verificações com exceções, como forma de cleanCode e no final fazendo foreach com a inserção do time na data correspondente*/
     public Time timeDaData(LocalDate data, List<Time> todosOsTimes){
         if (data == null){
-            throw new IllegalArgumentException("Data não pode  ser nula!");
+            throw new IllegalArgumentException("Data não pode ser nula!");
         }
         if (todosOsTimes == null){
             throw new IllegalArgumentException("Lista de times não pode ser nula!");
         }
-            for(Time time : todosOsTimes){
-                if (time.getData().equals(data)){
-                    return time;
-                }
+
+        for(Time time : todosOsTimes){
+            if (time.getData().equals(data)){
+                return time;
             }
+        }
 
         return null;
     }
