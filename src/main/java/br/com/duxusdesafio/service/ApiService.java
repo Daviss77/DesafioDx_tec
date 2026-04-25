@@ -6,10 +6,7 @@ import br.com.duxusdesafio.model.Time;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Service que possuirá as regras de negócio para o processamento dos dados
@@ -206,9 +203,33 @@ public class ApiService {
     /**
      * Vai retornar o número (quantidade) de Funções dentro do período
      */
-    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes){
-        // TODO Implementar método seguindo as instruções!
-        return null;
+    public Map<String, Long> contagemPorFuncao(LocalDate dataInicial, LocalDate dataFinal, List<Time> todosOsTimes) {
+
+        if (todosOsTimes == null) {
+            throw new IllegalArgumentException("Lista de times não pode ser nula!");
+        }
+
+        Map<String, Long> contagemFuncoes = new HashMap<>();
+
+        for (Time time : todosOsTimes) {
+
+            if (!isTimeValido(time, dataInicial, dataFinal)) continue;
+
+            List<ComposicaoTime> composicoes = time.getComposicaoTime();
+            if (composicoes == null) continue;
+
+            for (ComposicaoTime composicao : composicoes) {
+
+                if (composicao == null || composicao.getIntegrante() == null) continue;
+
+                String funcao = composicao.getIntegrante().getFuncao();
+                if (funcao == null) continue;
+
+                contagemFuncoes.put(funcao, contagemFuncoes.getOrDefault(funcao, 0L) + 1L);
+            }
+        }
+
+        return contagemFuncoes.isEmpty() ? null : contagemFuncoes;
     }
 
 
