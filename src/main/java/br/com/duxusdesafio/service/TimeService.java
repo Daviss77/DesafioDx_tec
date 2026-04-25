@@ -1,5 +1,6 @@
 package br.com.duxusdesafio.service;
 
+import br.com.duxusdesafio.dto.TimeResponseDto;
 import br.com.duxusdesafio.model.ComposicaoTime;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.model.Time;
@@ -48,5 +49,23 @@ public class TimeService {
 
     public void deletar(Long id){
         timeRepository.deleteById(id);
+    }
+
+    public TimeResponseDto converterParaDto(Time time){
+        TimeResponseDto dto = new TimeResponseDto();
+        dto.setData(time.getData());
+        dto.setNomeDoClube(time.getNomeDoClube());
+        dto.setData(time.getData());
+
+        List<String> nomes = new ArrayList<>();
+
+        for (ComposicaoTime ct : time.getComposicaoTime()) {
+            if(ct.getIntegrante() != null){
+                nomes.add(ct.getIntegrante().getNome());
+            }
+        }
+        dto.setIntegrantes(nomes);
+
+        return dto;
     }
 }

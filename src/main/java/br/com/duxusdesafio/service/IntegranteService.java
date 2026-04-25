@@ -1,5 +1,6 @@
 package br.com.duxusdesafio.service;
 
+import br.com.duxusdesafio.dto.IntegranteDto;
 import br.com.duxusdesafio.model.Integrante;
 import br.com.duxusdesafio.repository.IntegranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,16 @@ public class IntegranteService {
     public void deletar (Long id){
         buscarPorId(id);
         integranteRepository.deleteById(id);
+    }
+
+    public IntegranteDto converterParaDto(Integrante integrante) {
+
+        IntegranteDto dto = new IntegranteDto();
+        dto.setId(integrante.getId());
+        dto.setNome(integrante.getNome());
+        dto.setFuncao(integrante.getFuncao());
+
+        return dto;
     }
 
 }
