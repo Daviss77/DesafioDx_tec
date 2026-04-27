@@ -1,172 +1,333 @@
+# ⚽ Desafio Técnico - Sistema de Escalação de Times
 
-# Desafio de Desenvolvimento
+## 📌 Descrição
 
-O objetivo deste desafio é obter uma ideia das habilidades que o candidato possui, da organização de tempo e também do código.
+Este projeto foi desenvolvido como solução para um desafio técnico com foco na construção de uma **API REST utilizando Spring Boot**.
 
-## Considerações Importantes – Por favor, leia com atenção:
+A aplicação permite o gerenciamento de jogadores (integrantes) e a montagem de times, incluindo regras de negócio para análise de dados ao longo do tempo.
 
-- O desafio já tem códigos pré prontos para você completar as funcionalidades. Não é preciso reinventar a roda! Use o que existe!
+Também foi desenvolvida uma interface web simples para facilitar a interação com a API.
 
-- Use seu tempo de forma inteligente: Uma solução simples primeiro e depois avance.
+---
 
-- Comentários sempre são bem-vindos em métodos ou estruturas mais complexas.
+## 🚀 Tecnologias utilizadas
 
-- Parece não intuitivo, mas deixe as telas por último, pense na estrutura dos dados e nos métodos de gravação e exportação primeiro.
+* Java 17
+* Spring Boot
+* Spring Data JPA
+* H2 Database (em memória)
+* Maven
+* HTML, CSS, JavaScript
+* Bootstrap
 
-- Utilize os testes unitários já existentes e crie novos também, isso é importante. Não existe necessidade de 100% de cobertura, mas use-os para experimentar e validar sua solução – **é muito importante que os testes já existentes estejam passando após a sua implementação!**
+---
 
-- Faça commits frequentes, assim podemos ver a evolução da sua solução.
+## 🧱 Arquitetura do projeto
 
-- Sobre banco de dados, você pode usar qualquer um que esteja acostumado, inclusive em memória, se preferir. Aqui utilizamos, comumente: PostgreSQL, Microsoft SQL Server, Oracle DB, MySQL e, especialmente para testes, HSQLDB. 
+O projeto segue uma arquitetura em camadas:
 
-- Entregue tudo o que conseguir fazer, indiferente de estar completo ou não.
+### 📦 `controller`
 
-- Durante o período de teste, fique à vontade para enviar dúvidas ao recrutador.
+Responsável por expor os endpoints da API.
 
-- Ao final, deixamos alguns links que podem ser úteis para consulta, mas você pode consultar qualquer material, à vontade.
+* Recebe requisições HTTP
+* Converte DTO → entidade
+* Retorna respostas formatadas
 
-- Nos envie, ao final, uma descrição com detalhes de como podemos testar a sua implementação.
+---
 
-## O que você deve implementar:
+### 📦 `service`
 
-Imagine que você quer fazer um sistema de escalação de times. Toda semana você vai montar um time vencedor. 
+Camada de regras de negócio.
 
-Não importa se é Esporte tradicional ou eSports.
+Responsável por:
 
-Exemplos de Esporte tradicional : Futebol, Basquete.
+* Criar times com associação de integrantes
+* Aplicar regras analíticas
+* Processar dados
+* Converter entidades em DTOs
 
-Exemplos de eSports : Counter Strike, Valorant, Free Fire, League of Legends, APEX.
+---
 
-Sua tarefa é construir a melhor solução no tempo combinado, considerando os requisitos que estarão descritos abaixo.
+### 📦 `repository`
 
-Você pode usar a criatividade pois não existe uma solução definitiva para o desafio.
+Interfaces que estendem `JpaRepository`.
 
-Abaixo, mais detalhes:
+* Responsáveis pelo acesso ao banco de dados
 
-## Estrutura dos Dados
+---
 
-### Tabela de "Integrante" :
+### 📦 `model`
 
-- Id
-- Nome
-- Função
+Entidades JPA:
 
-### Tabela de Time:
+* `Time`
+* `Integrante`
+* `ComposicaoTime`
 
-- Id
-- Nome do Clube
-- Data
+---
 
-### Tabela de ComposicaoTime:
+### 📦 `dto`
 
-- Id
-- Id_Time  (foreign key tabela Time)
-- Id_Integrante  (foreign key tabela Integrante)
+Objetos de transferência de dados:
 
-## Funcionalidades Principais
+* `TimeDto` → entrada (criação de time)
+* `TimeResponseDto` → saída formatada
 
-### 1) Tratamento de dados – PASSO MAIS IMPORTANTE DO DESAFIO, foque nessa etapa primeiro.
+---
 
-Esse passo é o mais importante no teste porque gostaríamos de medir a sua capacidade de lidar com estruturas de dados. 
+### 🧪 Testes
 
-Já existe um service criado no projeto (ApiService), com métodos para serem implementados, e testes unitários para eles. Utilize-os!
+Foram implementados testes unitários com foco na camada de **service**, garantindo:
 
-Sendo possível, crie novos testes unitários, aumente os cases dos testes atuais, amplie essa cobertura de testes, pois é muito importante garantir que o código esteja atendendo corretamente o que se pede.
+* Correta criação de times
+* Associação de integrantes
+* Funcionamento das regras de negócio
 
-No quadro, alguns detalhes sobre os métodos:
+---
 
-| Método  | Parâmetros | Descrição |
-|--|--|--|
-| TimeDaData | Data, Lista de todos os Times                              | Vai retornar um Time, com a composição do time daquela data                                 |
-| IntegranteMaisUsado | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o integrante que tiver presente na maior quantidade de times dentro do período |
-| IntegrantesDoTimeMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar uma lista com os nomes dos integrantes do time mais recorrente dentro do período    |
-| FuncaoMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar a função mais recorrente nos times dentro do período                                |
-| ClubeMaisRecorrente | Data inicial e Data final (podem ser null), Lista de todos os Times |Vai retornar o nome do Clube mais comum dentro do período                      |
-| ContagemDeClubesNoPeriodo | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o número (quantidade) de aparições de cada Clube participante no período                           |
-| ContagemPorFuncao | Data inicial e Data final (podem ser null), Lista de todos os Times | Vai retornar o número (quantidade) de Funções dentro do período                             |
+## ▶️ Como executar o projeto
 
-## Funcionalidades Extras
-### 2) API de Cadastro
+### ✅ Pré-requisitos
 
-Lembrando: a prioridade é a funcionalidade correta, não as telas. 
+* Java 17+
+* Maven
 
-#### Cadastro de Integrantes
+---
 
-Fazer um cadastro de integrantes para os times.
+### 🚀 Executando
 
-#### Cadastro de Times
+```bash
+git clone https://github.com/Daviss77/DesafioDx_tec.git
+cd DesafioDx_tec
+mvn spring-boot:run
+```
 
-Fazer um cadastro de times onde não importa muito a quantidade de integrantes. 
+---
 
-Para cadastrar um time para uma determinada semana basta escolher os personagens/integrantes que farão parte dele.
+## 🌐 Acesso
 
+Após iniciar a aplicação:
 
-### 3) API para processamento de Dados
+```
+http://localhost:8080
+```
 
-Seu sistema vai processar as informações do banco de dados e vai exportá-las através de endpoints.
+---
 
-Você deve usar os selects para trazer todos os dados, mas processe eles na linguagem, através dos métodos implementados no passo 1.
+## 🗄️ Banco de dados
 
-| Endpoint  | Parâmetros |
-|--|--|
-| TimeDaData | Data | 
-| IntegrantesDoTimeMaisRecorrente | Data inicial e Data final (podem ser null) |
-| IntegranteMaisUsado | Data inicial e Data final (podem ser null) |
-| FuncaoMaisRecorrente | Data inicial e Data final (podem ser null) |
-| ClubeMaisRecorrente | Data inicial e Data final (podem ser null) |
-| ContagemDeClubesNoPeriodo | Data inicial e Data final (podem ser null) |
-| ContagemPorFuncao | Data inicial e Data final (podem ser null) |
+O projeto utiliza o **H2 Database (em memória)**:
 
-Exemplos de Resultados esperados:
+* Não requer instalação
+* Os dados são reiniciados ao subir a aplicação
 
-TimeDaData
-``` 
+Console do banco:
+
+```
+http://localhost:8080/h2-console
+```
+
+---
+
+## 🔗 Endpoints da API
+
+### 👤 Integrantes
+
+#### ➕ Criar integrante
+
+```
+POST /integrantes
+```
+
+Body:
+
+```json
 {
-  "data": 2021-01-15,
-  "clube": "Falcons",
-  "integrantes": [ "Bangalore", "BloodHound", "Crypto" ]
+  "nome": "Neymar",
+  "funcao": "Atacante"
 }
 ```
 
-FuncaoMaisRecorrente
-``` 
+---
+
+#### 📋 Listar integrantes
+
+```
+GET /integrantes
+```
+
+---
+
+## ⚽ Times
+
+### ➕ Criar time
+
+```
+POST /times
+```
+
+Body:
+
+```json
 {
-  "Função" : "Meia"
+  "nomeDoClube": "Palmeiras",
+  "data": "2026-04-26",
+  "idsIntegrantes": [1, 2, 3]
 }
 ```
 
-ContagemDeClubesNoPeriodo
-``` 
+---
+
+### 📋 Listar todos os times
+
+```
+GET /times
+```
+
+---
+
+### 🔍 Buscar time por ID
+
+```
+GET /times/{id}
+```
+
+---
+
+### ❌ Deletar time
+
+```
+DELETE /times/{id}
+```
+
+---
+
+## 📊 Consultas (Regras de Negócio)
+
+### 🔹 1. Time da data
+
+```
+GET /api/time-da-data?data=2021-01-15
+```
+
+✔️ Retorna o time correspondente à data informada
+
+---
+
+### 🔹 2. Integrantes do time mais recorrente
+
+```
+GET /api/integrantes-time-mais-recorrente?dataInicial=2021-01-01&dataFinal=2021-12-31
+```
+
+✔️ Retorna lista de nomes dos integrantes
+
+---
+
+### 🔹 3. Integrante mais utilizado
+
+```
+GET /api/integrante-mais-usado?dataInicial=2021-01-01&dataFinal=2021-12-31
+```
+
+✔️ Retorna o nome do integrante mais utilizado
+
+---
+
+### 🔹 4. Função mais recorrente
+
+```
+GET /api/funcao-mais-recorrente
+```
+
+✔️ Pode ser executado sem parâmetros
+
+---
+
+### 🔹 5. Clube mais recorrente
+
+```
+GET /api/clube-mais-recorrente
+```
+
+---
+
+### 🔹 6. Contagem de clubes
+
+```
+GET /api/contagem-clubes
+```
+
+✔️ Exemplo de retorno:
+
+```json
 {
-  "Falcons": 5,
-  "FURIA": 2,
-  "DarkZero Esports": 3
+  "Falcons": 2,
+  "FURIA": 1
 }
 ```
 
+---
 
-### 4) Telas
+### 🔹 7. Contagem por função
 
-Conforme já foi dito as telas de cadastro tem prioridade menor do que o funcionamento da API.
+```
+GET /api/contagem-funcoes
+```
 
-Você pode fazer as telas da maneira mais simples possível e usar qualquer framework que facilite o desenvolvimento.
+✔️ Exemplo de retorno:
 
-- Tela de Inserção de Integrantes
-    - Um formulário com os campos é suficiente
-- Tela de Montagem de Times pode ser feita de diversas maneiras, algumas sugestões:
-    - Fazer uma listagem e colocar um checkbox ao lado de cada integrante
-    - Fazer um "transfer" usando dois "selects" de html
-    - Usar um componente de jquery ( https://www.jqueryscript.net/blog/best-multiple-select.html )
+```json
+{
+  "Atacante": 3,
+  "Defensor": 2
+}
+```
 
-Não se sinta obrigado a utilizar algo dessas sugestões, fique à vontade para utilizar o que tiver mais domínio ou preferência.
+---
 
-O importante é a tela estar funcional e a beleza não será avaliada.
+## 🧪 Testando com Postman
 
-## Alguns links úteis para consulta
+Fluxo recomendado:
 
-- https://www.baeldung.com/java-collections
-- https://www.baeldung.com/java-8-streams-introduction
-- https://pt.linkedin.com/pulse/tdd-com-java-junit-e-mockito-tiago-perroni
-- https://www.devmedia.com.br/rest-tutorial/28912
-- https://www.baeldung.com/rest-with-spring-series
-- https://www.baeldung.com/jackson-vs-gson
+1. Criar integrantes (`POST /integrantes`)
+2. Listar integrantes (`GET /integrantes`)
+3. Criar times (`POST /times`)
+4. Executar consultas analíticas (`/api/...`)
+5. Validar os resultados
+
+---
+
+## 💻 Interface Web
+
+Rotas disponíveis:
+
+* `/` → Página inicial
+* `/cadastro-integrante` → Cadastro de jogadores
+* `/montar-time` → Montagem de times
+
+---
+
+## 🎯 Decisões técnicas
+
+* Uso de DTOs para desacoplamento
+* Separação em camadas (Controller, Service, Repository)
+* Separação dos testes unitários por responsabilidade (Fácil legibilidade)
+* Banco em memória para facilitar execução
+* Frontend simples com foco na API
+
+---
+
+## 🚀 Melhorias futuras
+
+* Implementar autenticação (Spring Security)
+* Utilizar banco real (MySQL/PostgreSQL)
+* Melhorar interface (ex: escalação visual)
+* Adicionar validações mais robustas
+
+---
+
+## 👨‍💻 Autor
+
+Desenvolvido por **Davi Santana**
