@@ -6,6 +6,8 @@ import br.com.duxusdesafio.repository.IntegranteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class IntegranteService {
 
@@ -14,6 +16,10 @@ public class IntegranteService {
 
     public Integrante salvar(Integrante integrante){
         return integranteRepository.save(integrante);
+    }
+
+    public List<Integrante> listar() {
+        return integranteRepository.findAll();
     }
 
     public Integrante buscarPorId(Long id){

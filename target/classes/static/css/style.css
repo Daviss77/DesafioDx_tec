@@ -1,0 +1,90 @@
+/* 🌤️ Fundo geral (azul claro) */
+body {
+    background-color: #dbeafe; /* azul claro */
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+}
+
+/* 📦 Container principal (azul escuro) */
+.container {
+    background-color: #1e3a8a; /* azul escuro */
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #ffffff;
+}
+
+/* 🧠 Títulos */
+h2, h4 {
+    color: #ffffff !important;
+}
+
+/* 🔤 FORÇA tudo branco dentro do container */
+.container,
+.container * {
+    color: #ffffff !important;
+}
+
+/* 🧾 Inputs */
+.form-control {
+    background-color: #1e293b !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+}
+
+/* Placeholder */
+.form-control::placeholder {
+    color: #cbd5f5 !important;
+}
+
+/* 📅 Input date ícone branco */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+/* 📋 Lista de jogadores */
+#listaIntegrantes {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: #1e293b;
+    border-radius: 10px;
+    border: 1px solid #ffffff;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 👤 Cada jogador */
+.form-check {
+    background-color: #334155;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid #ffffff;
+}
+
+/* Hover */
+.form-check:hover {
+    background-color: #475569;
+    cursor: pointer;
+}
+
+/* Checkbox */
+.form-check-input {
+    margin-right: 10px;
+    transform: scale(1.2);
+}
+
+/* Navbar ajuste */
+.navbar {
+    border-bottom: 2px solid #ffffff;
+}
+
+/* Botão */
+.btn-success {
+    background-color: #22c55e;
+    border: none;
+    font-weight: bold;
+}
+
+.btn-success:hover {
+    background-color: #16a34a;
+}

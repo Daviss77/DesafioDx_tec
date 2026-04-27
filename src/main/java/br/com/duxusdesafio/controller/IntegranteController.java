@@ -6,6 +6,8 @@ import br.com.duxusdesafio.service.IntegranteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/integrantes")
 public class IntegranteController {
@@ -16,6 +18,11 @@ public class IntegranteController {
     @PostMapping
     public Integrante salvar(@RequestBody Integrante integrante){
         return integranteService.salvar(integrante);
+    }
+
+    @GetMapping
+    public List<Integrante> listar() {
+        return integranteService.listar();
     }
 
     @GetMapping("/{id}")

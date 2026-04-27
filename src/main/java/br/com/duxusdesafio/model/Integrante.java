@@ -1,5 +1,8 @@
 package br.com.duxusdesafio.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -22,6 +25,7 @@ public class Integrante {
 	private String funcao;
 	
 	@OneToMany(mappedBy = "integrante")
+	@JsonManagedReference("integrante-composicao")
 	private List<ComposicaoTime> composicaoTime;
 
 

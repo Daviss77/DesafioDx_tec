@@ -1,5 +1,7 @@
 package br.com.duxusdesafio.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +36,7 @@ public class Time {
      * Elenco ou equipe - o conjunto de integrantes desse time
      */
 	@OneToMany(mappedBy = "time", cascade = CascadeType.ALL)
+	@JsonManagedReference("time-composicao")
 	private List<ComposicaoTime> composicaoTime;
 
 	public Time() {
